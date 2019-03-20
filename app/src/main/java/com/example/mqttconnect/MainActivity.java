@@ -27,16 +27,22 @@ import java.io.UnsupportedEncodingException;
 public class MainActivity extends AppCompatActivity {
      /*
      to connect with password:
-     static String MQTTHOST=
+
      static String USERNAME=
      static String PASSWORD=
 
       */
+
+     //Subscription Topic
      String topicStr="test1";
+     //server
+     static String MQTTHOST="tcp://broker.hivemq.com:1883";
+
     private Button disconnect_button;
     private TextView sub_topic;
     MqttAndroidClient client;
     private Button sub_button;
+
     //MqttConnectOptions options
     Vibrator vibrator;
     Ringtone ringtone;
@@ -55,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         String clientId = MqttClient.generateClientId();
         client =
-                new MqttAndroidClient(MainActivity.this, "tcp://broker.hivemq.com:1883",
+                new MqttAndroidClient(MainActivity.this, MQTTHOST,
                         clientId);
         //options = new MqttConnectOptions();
         //options.setUserName("USERNAME");
