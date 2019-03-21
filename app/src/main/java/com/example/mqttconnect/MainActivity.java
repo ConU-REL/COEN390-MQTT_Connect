@@ -22,7 +22,6 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.io.UnsupportedEncodingException;
 
 public class MainActivity extends AppCompatActivity {
      /*
@@ -39,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
      static String MQTTHOST="10.0.22.10";
 
     private Button disconnect_button;
+    private Button connect_button;
     private TextView sub_topic;
     MqttAndroidClient client;
     private Button sub_button;
+
+    String clientId;
 
     //MqttConnectOptions options
     Vibrator vibrator;
@@ -52,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sub_topic=findViewById(R.id.sub_topic);
         sub_button=findViewById(R.id.sub_button);
+        disconnect_button=findViewById(R.id.disconnect_button);
+        connect_button=findViewById(R.id.connect_button);
+
 
         //vibrator=(Vibrator)getSystemService(VIBRATOR_SERVICE);
 
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         //ringtone=RingtoneManager.getRingtone(getApplicationContext(),uri);
 
 
-        String clientId = MqttClient.generateClientId();
+        clientId = MqttClient.generateClientId();
         client =
                 new MqttAndroidClient(MainActivity.this, MQTTHOST,
                         clientId);
@@ -96,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        disconnect_button=findViewById(R.id.disconnect_button);
         disconnect_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,6 +175,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        connect_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                m_connect();
+            }
+        });
+
     }
     public void toPublish(View view)
     {
@@ -182,6 +193,31 @@ public class MainActivity extends AppCompatActivity {
             //encodedPayload = message.getBytes("UTF-8");
             //MqttMessage message = new MqttMessage(encodedPayload);
             client.publish(topic, message.getBytes(),0,false);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void m_connect(){
+        try {
+            //IMqttToken token = client.connect(options);
+            IMqttToken token = client.connect();
+            token.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    // We are connected
+                    Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
+
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    // Something went wrong e.g. connection timeout or firewall problems
+                    Toast.makeText(MainActivity.this,"Connection Failed",Toast.LENGTH_SHORT).show();
+
+
+                }
+            });
         } catch (MqttException e) {
             e.printStackTrace();
         }
