@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
      //Subscription Topic
      String topicStr="test1";
      //server
-     static String MQTTHOST="tcp://broker.hivemq.com:1883";
+     static String MQTTHOST="10.0.22.10";
 
     private Button disconnect_button;
     private TextView sub_topic;
