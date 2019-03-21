@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
      //Subscription Topic
      String topicStr="test1";
      //server
-     static String MQTTHOST="10.0.22.10";
+     static String MQTTHOST="tcp://10.0.22.10:1883";
 
     private Button disconnect_button;
     private Button connect_button;
@@ -65,40 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         clientId = MqttClient.generateClientId();
-        client =
-                new MqttAndroidClient(MainActivity.this, MQTTHOST,
-                        clientId);
+        client = new MqttAndroidClient(MainActivity.this,
+                "tcp://10.0.22.10:1883", clientId);
+
         //options = new MqttConnectOptions();
         //options.setUserName("USERNAME");
         //options.setPassword("PASSWORD".toCharArray());
 
-
-
-                try {
-                    //IMqttToken token = client.connect(options);
-                    IMqttToken token = client.connect();
-                    token.setActionCallback(new IMqttActionListener() {
-                        @Override
-                        public void onSuccess(IMqttToken asyncActionToken) {
-                            // We are connected
-                            Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
-
-                        }
-
-                        @Override
-                        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                            // Something went wrong e.g. connection timeout or firewall problems
-                            Toast.makeText(MainActivity.this,"Connection Failed",Toast.LENGTH_SHORT).show();
-
-
-                        }
-                    });
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-
-
-
+        m_connect();
 
 
         disconnect_button.setOnClickListener(new View.OnClickListener() {
